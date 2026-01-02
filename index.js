@@ -10,17 +10,9 @@ app.use(express.json());
 // DB
 connectDB();
 
-console.log(require('./routes/tentativoTest.routes'));
-
-
 // Routes
 app.use(require('./routes/bambino.routes'));
 app.use(require('./routes/tentativoTest.routes'));
-
-// Root test
-/*app.get('/', (req, res) => {
-  res.send('API funzionante!');
-});*/
 
 // Avvio server
 app.listen(3000, () => {

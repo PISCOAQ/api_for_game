@@ -51,4 +51,31 @@ const creaTentativo = async (req, res) => {
   }
 };
 
-module.exports = { creaTentativo };
+const getTentativibyBambino = async (req, res) => {
+  try {
+    const { bambinoId } = req.params;
+    const { fase } = req.query;
+
+    // filtro base
+    const filtro = { bambino: bambinoId };
+
+    // filtro opzionale
+    if (fase) {
+      filtro.fase = fase;
+    }
+
+    const tentativi = await TentativoTest
+      .find(filtro)
+      .sort({ createdAt: 1 });
+
+    res.json(tentativi);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore del server' });
+  }
+};
+
+
+
+module.exports = { creaTentativo, getTentativibyBambino };
