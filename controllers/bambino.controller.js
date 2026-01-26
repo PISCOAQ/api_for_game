@@ -1,10 +1,20 @@
+const bambino = require('../models/bambino');
 const Bambino = require('../models/bambino');
+const generaCodiceGiocoUnico = require('../utils/codiceGiocoGenerator');
 
 // POST /bambino
 const creaBambino = async (req, res) => {
   try {
-    const nuovoBambino = await Bambino.create(req.body);
-    res.status(201).json(nuovoBambino);
+    const { nome, cognome, dataNascita, sesso } = req.body;
+    const codiceGioco = await generaCodiceGiocoUnico();
+    const nuovoBambino = await Bambino.create({
+      nome,
+      cognome,
+      dataNascita,
+      sesso,
+      codiceGioco,
+    });
+    res.status(201).json({nuovoBambino});
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
