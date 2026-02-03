@@ -5,13 +5,17 @@ const generaCodiceGiocoUnico = require('../utils/codiceGiocoGenerator');
 // POST /bambino
 const creaBambino = async (req, res) => {
   try {
-    const { nome, cognome, dataNascita, sesso } = req.body;
+    const { nome, cognome, dataNascita, sesso, email, numTelefono, scuolaFrequentata, titoloStudio } = req.body;
     const codiceGioco = await generaCodiceGiocoUnico();
     const nuovoBambino = await Bambino.create({
       nome,
       cognome,
       dataNascita,
       sesso,
+      email,
+      numTelefono,
+      scuolaFrequentata,
+      titoloStudio,
       codiceGioco,
     });
     res.status(201).json({nuovoBambino});
