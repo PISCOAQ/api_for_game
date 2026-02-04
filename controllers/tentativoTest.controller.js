@@ -1,81 +1,70 @@
 const Bambino = require('../models/bambino');
 const TentativoTest = require('../models/tentativoTest');
 
-const creaTentativo = async (req, res) => {
+/**
+ * POST /api/tentativi-test
+ * Salva un tentativo di test inviato dal gioco
+ */
+exports.createTentativoTest = async (req, res) => {
   try {
     const {
-      bambinoId,
-      percorso,
-      fase,
-      tentativo,
-      risposteCorrette,
-      tempoRisposta,
-      superato
+      codiceGioco,
+      testId,
+      nomeTest,
+      tipoTest,
+      percorsoId,
+      superato,
+      tempoMedioReazione,
+      domande
     } = req.body;
 
-    if (
-      !bambinoId ||
-      !percorso ||
-      !fase ||
-      tentativo === undefined ||
-      risposteCorrette === undefined ||
-      tempoRisposta === undefined ||
-      superato === undefined
-    ) {
-      return res.status(400).json({ error: 'Dati mancanti' });
-    }
-
-    const bambino = await Bambino.findById(bambinoId);
+    // 1️⃣ Trova il bambino tramite codiceGioco
+    const bambino = await Bambino.findOne({ codiceGioco });
     if (!bambino) {
-      return res.status(404).json({ error: 'Bambino non trovato' });
+      return res.status(404).json({ error: 'Codice gioco non valido' });
     }
 
-    const nuovoTentativo = await TentativoTest.create({
-      bambino: bambinoId,
-      percorso,
-      fase,
-      tentativo,
-      risposteCorrette,
-      tempoRisposta,
-      superato
+    // 2️⃣ Crea un nuovo tentativoTest
+    const tentativo = new TentativoTest({
+      bambinoId: bambino._id,
+      testId,
+      nomeTest,
+      tipoTest,
+      percorsoId,
+      superato,
+      tempoMedioReazione,
+      domande
     });
 
-    res.status(201).json({
-      message: 'Tentativo salvato correttamente',
-      tentativo: nuovoTentativo
-    });
+    // 3️⃣ Salva nel DB
+    await tentativo.save();
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Errore del server' });
+    // 4️⃣ Risposta OK
+    res.status(201).json(tentativo);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
-const getTentativibyBambino = async (req, res) => {
+exports.getDatiBambinoPerGioco = async (req, res) => {
   try {
-    const { bambinoId } = req.params;
-    const { fase } = req.query;
+    const { codiceGioco } = req.params;
 
-    // filtro base
-    const filtro = { bambino: bambinoId };
+    // 1️⃣ Trova il bambino tramite codiceGioco
+    const bambino = await Bambino.findOne(
+      { codiceGioco },
+      'nome cognome scuolaFrequentata titoloStudio' // campi da restituire
+    );
 
-    // filtro opzionale
-    if (fase) {
-      filtro.fase = fase;
+    if (!bambino) {
+      return res.status(404).json({ error: 'Codice gioco non valido' });
     }
 
-    const tentativi = await TentativoTest
-      .find(filtro)
-      .sort({ createdAt: 1 });
+    // 2️⃣ Risposta JSON al gioco
+    res.json(bambino);
 
-    res.json(tentativi);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Errore del server' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
-
-
-
-module.exports = { creaTentativo, getTentativibyBambino };

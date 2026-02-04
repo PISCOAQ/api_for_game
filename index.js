@@ -12,7 +12,7 @@ connectDB();
 
 // Routes
 app.use(require('./routes/bambino.routes'));
-app.use(require('./routes/tentativoTest.routes'));
+app.use('/api/tentativi-test', require('./routes/tentativoTest.routes'));
 
 // Avvio server
 app.listen(3000, () => {

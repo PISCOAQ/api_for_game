@@ -1,44 +1,75 @@
 const mongoose = require('mongoose');
 
-const TentativoTestSchema = new mongoose.Schema({
-  bambino: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bambino',
+const DomandaSchema = new mongoose.Schema({
+  indice: {
+    type: Number,
     required: true
   },
+  correct: {
+    type: Boolean,
+    required: true
+  },
+  reactionTime: {
+    type: Number,
+    required: true
+  }
+}, { _id: false });
 
-  percorso: {
+const TentativoTestSchema = new mongoose.Schema({
+
+  bambinoId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bambino',
+    required: true,
+    index: true
+  },
+
+  // Identificativo del test
+  testId: {
     type: String,
     required: true
   },
 
-  fase: {
+  // Nome leggibile del test
+  nomeTest: {
+    type: String,
+    required: true
+  },
+
+  // PRE o POST esercitazione
+  tipoTest: {
     type: String,
     enum: ['pre', 'post'],
     required: true
   },
 
-  tentativo: {
-    type: Number,
+  // Percorso
+  percorsoId: {
+    type: String,
     required: true
   },
 
-  risposteCorrette: {
-    type: Number,
-    required: true
-  },
-
-  tempoRisposta: {
-    type: Number,
-    required: true
-  },
-
+  // Esito
   superato: {
     type: Boolean,
     required: true
+  },
+
+  // Tempo medio di reazione
+  tempoMedioReazione: {
+    type: Number,
+    required: true
+  },
+
+  // Dettaglio domande
+  domande: {
+    type: [DomandaSchema],
+    required: true
   }
+
 }, {
-  timestamps: true
+  timestamps: true,
+  versionKey: false
 });
 
 module.exports = mongoose.model('TentativoTest', TentativoTestSchema);

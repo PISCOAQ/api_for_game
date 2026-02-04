@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {
-  creaTentativo,
-  getTentativibyBambino
-} = require('../controllers/tentativoTest.controller');
+const controller = require('../controllers/tentativoTest.controller');
 
-router.post('/tentativoTest', creaTentativo);
+// POST → salvare un tentativo
+router.post('/', controller.createTentativoTest);
 
-router.get('/bambino/:bambinoId', getTentativibyBambino);
+// GET → dati anagrafici del bambino per il gioco
+router.get('/by-codice/:codiceGioco', controller.getDatiBambinoPerGioco);
 
 module.exports = router;
