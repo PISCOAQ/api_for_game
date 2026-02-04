@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const SCUOLE = [
   'Scuola_secondaria_di_primo_grado',
   'Scuola_secondaria_di_secondo_grado',
-  'Università',
+  'Universita',
   'Non_frequento',
   'Altro',
 ];
@@ -13,7 +13,7 @@ const TITOLI_STUDIO = [
   'Diploma_di_scuola_superiore',
   'Laurea_di_I_livello',
   'Laurea_di_II_livello',
-  'Master_Dottorato_Specializzazione',
+  'Master_dottorato_specializzazione',
 ]
 
 const BambinoSchema = new mongoose.Schema({
