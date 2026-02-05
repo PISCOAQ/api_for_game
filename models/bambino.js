@@ -66,6 +66,23 @@ const BambinoSchema = new mongoose.Schema({
     required: true,
   },
 
+  percorsiAssegnati: [
+  {
+    percorsoIdEsterno: {
+      type: String,
+      required: true
+    },
+    nomePercorso: {
+      type: String,
+      required: true
+    },
+    assegnatoIl: {
+      type: Date,
+      default: Date.now
+    }
+  }
+],
+
 
 }, {
   timestamps: true,

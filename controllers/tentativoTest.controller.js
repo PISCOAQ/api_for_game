@@ -18,13 +18,13 @@ exports.createTentativoTest = async (req, res) => {
       domande
     } = req.body;
 
-    // 1️⃣ Trova il bambino tramite codiceGioco
+    // Trova il bambino tramite codiceGioco
     const bambino = await Bambino.findOne({ codiceGioco });
     if (!bambino) {
       return res.status(404).json({ error: 'Codice gioco non valido' });
     }
 
-    // 2️⃣ Crea un nuovo tentativoTest
+    // Crea un nuovo tentativoTest
     const tentativo = new TentativoTest({
       bambinoId: bambino._id,
       testId,
@@ -36,10 +36,10 @@ exports.createTentativoTest = async (req, res) => {
       domande
     });
 
-    // 3️⃣ Salva nel DB
+    // Salva nel DB
     await tentativo.save();
 
-    // 4️⃣ Risposta OK
+    // Risposta OK
     res.status(201).json(tentativo);
 
   } catch (error) {
@@ -51,7 +51,7 @@ exports.getDatiBambinoPerGioco = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
 
-    // 1️⃣ Trova il bambino tramite codiceGioco
+    // Trova il bambino tramite codiceGioco
     const bambino = await Bambino.findOne(
       { codiceGioco },
       'nome cognome scuolaFrequentata titoloStudio' // campi da restituire
@@ -61,10 +61,11 @@ exports.getDatiBambinoPerGioco = async (req, res) => {
       return res.status(404).json({ error: 'Codice gioco non valido' });
     }
 
-    // 2️⃣ Risposta JSON al gioco
+    // Risposta JSON al gioco
     res.json(bambino);
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+

@@ -34,7 +34,71 @@ const listaBambini = async (req, res) => {
   }
 };
 
+const assegnaPercorso = async (req, res) => {
+  try {
+    const { codiceGioco } = req.params;
+    const { percorsoIdEsterno, nomePercorso } = req.body;
+
+    if (!percorsoIdEsterno || !nomePercorso) {
+      return res.status(400).json({ message: 'Dati percorso mancanti' });
+    }
+
+    const bambino = await Bambino.findOne({codiceGioco});
+
+    if (!bambino) {
+      return res.status(404).json({ message: 'Utente non trovato' });
+    }
+
+    // evita duplicati
+    const giàAssegnato = bambino.percorsiAssegnati.some(
+      p => p.percorsoIdEsterno === percorsoIdEsterno
+    );
+
+    if (giàAssegnato) {
+      return res.status(200).json({ message: 'Percorso già assegnato' });
+    }
+
+    bambino.percorsiAssegnati.push({
+      percorsoIdEsterno,
+      nomePercorso
+    });
+
+    await bambino.save();
+
+    res.status(200).json({
+      message: 'Percorso assegnato correttamente',
+      percorsiAssegnati: bambino.percorsiAssegnati
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Errore server' });
+  }
+};
+
+const getPercorsiAssegnati = async (req, res) => {
+  try {
+    const { codiceGioco } = req.params;
+
+    const bambino = await Bambino.findOne({ codiceGioco }).select('percorsiAssegnati');
+
+    if (!bambino) {
+      return res.status(404).json({ message: 'Bambino non trovato' });
+    }
+
+    res.status(200).json(bambino.percorsiAssegnati);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Errore server' });
+  }
+};
+
+
+
+
 module.exports = {
   creaBambino,
-  listaBambini
+  listaBambini,
+  assegnaPercorso,
+  getPercorsiAssegnati,
 };
