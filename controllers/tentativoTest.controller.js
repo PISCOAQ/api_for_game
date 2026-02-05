@@ -15,6 +15,7 @@ exports.createTentativoTest = async (req, res) => {
       percorsoId,
       superato,
       tempoMedioReazione,
+      movimentoMouse,
       domande
     } = req.body;
 
@@ -33,6 +34,7 @@ exports.createTentativoTest = async (req, res) => {
       percorsoId,
       superato,
       tempoMedioReazione,
+      movimentoMouse,
       domande
     });
 
@@ -54,7 +56,7 @@ exports.getDatiBambinoPerGioco = async (req, res) => {
     // Trova il bambino tramite codiceGioco
     const bambino = await Bambino.findOne(
       { codiceGioco },
-      'nome cognome scuolaFrequentata titoloStudio' // campi da restituire
+      'nome cognome percorsiAssegnati' // campi da restituire
     );
 
     if (!bambino) {
@@ -66,6 +68,23 @@ exports.getDatiBambinoPerGioco = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// GET -> tutti i tentativi di un bambino
+exports.getTestByBambino = async (req, res) => {
+  try {
+    const { codiceGioco } = req.params;
+
+    const bambino = await Bambino.findOne({ codiceGioco });
+    if (!bambino) return res.status(404).json({ message: 'Bambino non trovato' });
+
+    const tentativi = await TentativoTest.find({ bambinoId: bambino._id });
+
+    return res.status(200).json(tentativi);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Errore del server' });
   }
 };
 

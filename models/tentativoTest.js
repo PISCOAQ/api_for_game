@@ -61,6 +61,11 @@ const TentativoTestSchema = new mongoose.Schema({
     required: true
   },
 
+  movimentoMouse: {
+    type: Number,
+    required: true
+  },
+
   // Dettaglio domande
   domande: {
     type: [DomandaSchema],
