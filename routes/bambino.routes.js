@@ -8,14 +8,22 @@ const {
 } = require('../controllers/bambino.controller');
 const bambino = require('../models/bambino');
 
+const {
+  salvaDiagnosi,
+  eliminaDiagnosi,
+} = require('../controllers/diagnosi.controller');
+
+
+
 
 router.post('/bambino', creaBambino);
 router.get('/bambino', listaBambini);
 
-//POST -> assegna percorso
-router.post('/bambini/by-codice/:codiceGioco/assegna-percorso', assegnaPercorso);
-
+router.post('/bambini/:id/assegna-percorso', assegnaPercorso);
 router.get('/bambini/:codiceGioco/percorsi', getPercorsiAssegnati);
+
+router.put('/bambini/:id/diagnosi', salvaDiagnosi);
+router.delete('/bambini/:id/diagnosi', eliminaDiagnosi);
 
 
 module.exports = router;

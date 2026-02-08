@@ -16,6 +16,31 @@ const TITOLI_STUDIO = [
   'Master_dottorato_specializzazione',
 ]
 
+const DiagnosiSchema = new mongoose.Schema(
+  {
+    testo: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    livelloGravita: {
+      type: String,
+      enum: ['Livello_1', 'Livello_2', 'Livello_3'],
+      required: true,
+    },
+    note: {
+      type: String,
+      default: null,
+    },
+    dataInserimento: {
+      type: Date,
+      default: Date.now,
+      immutable: true,
+    },
+  },
+  { _id: false } // 👈 importantissimo
+);
+
 const BambinoSchema = new mongoose.Schema({
   nome: { 
     type: String,
@@ -64,6 +89,11 @@ const BambinoSchema = new mongoose.Schema({
     type: String,
     enum: TITOLI_STUDIO,
     required: true,
+  },
+
+  diagnosi: {
+    type: DiagnosiSchema,
+    default: null,
   },
 
   percorsiAssegnati: [

@@ -36,14 +36,14 @@ const listaBambini = async (req, res) => {
 
 const assegnaPercorso = async (req, res) => {
   try {
-    const { codiceGioco } = req.params;
+    const { id } = req.params;
     const { percorsoIdEsterno, nomePercorso } = req.body;
 
     if (!percorsoIdEsterno || !nomePercorso) {
       return res.status(400).json({ message: 'Dati percorso mancanti' });
     }
 
-    const bambino = await Bambino.findOne({codiceGioco});
+    const bambino = await Bambino.findById(id);
 
     if (!bambino) {
       return res.status(404).json({ message: 'Utente non trovato' });
@@ -65,10 +65,7 @@ const assegnaPercorso = async (req, res) => {
 
     await bambino.save();
 
-    res.status(200).json({
-      message: 'Percorso assegnato correttamente',
-      percorsiAssegnati: bambino.percorsiAssegnati
-    });
+    res.status(200).json({bambino});
 
   } catch (error) {
     console.error(error);
