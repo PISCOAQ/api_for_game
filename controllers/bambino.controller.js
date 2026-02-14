@@ -90,6 +90,73 @@ const getPercorsiAssegnati = async (req, res) => {
   }
 };
 
+// PATCH /bambini/:codiceGioco/progressi
+const updateProgressiGioco = async (req, res) => {
+  try {
+    const { codiceGioco } = req.params;
+    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier } = req.body;
+
+    // Costruisco oggetto aggiornamenti SOLO con campi permessi
+    const aggiornamenti = {};
+
+    if (inventario && typeof inventario === "object") {
+      aggiornamenti.inventario = inventario;
+    }
+
+    if (lookAttuale && typeof lookAttuale === "object") {
+      aggiornamenti.lookAttuale = lookAttuale;
+    }
+
+    if (typeof tipoAvatar === "number") {
+      aggiornamenti.tipoAvatar = tipoAvatar;
+    }
+
+    if (typeof Livello_Attuale === "number") {
+      aggiornamenti.Livello_Attuale = Livello_Attuale;
+    }
+
+    if (typeof PosizioneX === "number") {
+      aggiornamenti.PosizioneX = PosizioneX;
+    }
+
+    if (typeof PosizioneY === "number") {
+      aggiornamenti.PosizioneY = PosizioneY;
+    }
+
+    if (typeof moneteNotifier === "number") {
+      aggiornamenti.moneteNotifier = moneteNotifier;
+    }
+
+
+
+    if (Object.keys(aggiornamenti).length === 0) {
+      return res.status(400).json({
+        message: "Nessun campo valido da aggiornare"
+      });
+    }
+
+    console.log("Aggiornamenti inviati:", aggiornamenti);
+
+
+    const bambinoAggiornato = await Bambino.findOneAndUpdate(
+      { codiceGioco },
+      { $set: aggiornamenti },
+      { new: true }
+    );
+
+    if (!bambinoAggiornato) {
+      return res.status(404).json({ message: "Bambino non trovato" });
+    }
+
+    res.status(200).json(bambinoAggiornato);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Errore server" });
+  }
+};
+
+
 
 
 
@@ -98,4 +165,5 @@ module.exports = {
   listaBambini,
   assegnaPercorso,
   getPercorsiAssegnati,
+  updateProgressiGioco,
 };

@@ -96,8 +96,7 @@ const BambinoSchema = new mongoose.Schema({
     default: null,
   },
 
-  percorsiAssegnati: [
-  {
+  percorsiAssegnati: [{
     percorsoIdEsterno: {
       type: String,
       required: true
@@ -110,8 +109,39 @@ const BambinoSchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     }
-  }
-],
+  }],
+  tipoAvatar: {
+    type: Number,
+    default: null,
+  },
+  Livello_Attuale: {
+    type: Number,
+    default: 0
+  },
+  PosizioneX: {
+    type: Number,
+    default: 0
+  },
+  PosizioneY: {
+    type: Number,
+    dafault: 0
+  },
+  lookAttuale: {
+    type: Map,
+    of: String,
+    default: {},
+  },
+  inventario: {
+    type: Map,
+    of: [String],
+    default: {},
+  },
+  moneteNotifier: {
+    type: Number,
+    default: 0,
+  },
+
+  
 
 
 }, {

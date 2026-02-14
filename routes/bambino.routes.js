@@ -5,6 +5,7 @@ const {
   listaBambini,
   assegnaPercorso,
   getPercorsiAssegnati,
+  updateProgressiGioco,
 } = require('../controllers/bambino.controller');
 const bambino = require('../models/bambino');
 
@@ -21,6 +22,8 @@ router.get('/bambino', listaBambini);
 
 router.post('/bambini/:id/assegna-percorso', assegnaPercorso);
 router.get('/bambini/:codiceGioco/percorsi', getPercorsiAssegnati);
+
+router.patch('/bambini/:codiceGioco/progressi', updateProgressiGioco);
 
 router.put('/bambini/:id/diagnosi', salvaDiagnosi);
 router.delete('/bambini/:id/diagnosi', eliminaDiagnosi);
