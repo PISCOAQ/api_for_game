@@ -49,27 +49,7 @@ exports.createTentativoTest = async (req, res) => {
   }
 };
 
-exports.getDatiBambinoPerGioco = async (req, res) => {
-  try {
-    const { codiceGioco } = req.params;
 
-    // Trova il bambino tramite codiceGioco
-    const bambino = await Bambino.findOne(
-      { codiceGioco },
-      'nome cognome percorsiAssegnati' // campi da restituire
-    );
-
-    if (!bambino) {
-      return res.status(404).json({ error: 'Codice gioco non valido' });
-    }
-
-    // Risposta JSON al gioco
-    res.json(bambino);
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 // GET -> tutti i tentativi di un bambino
 exports.getTestByBambino = async (req, res) => {

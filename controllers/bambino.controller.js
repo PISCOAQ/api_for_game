@@ -156,6 +156,28 @@ const updateProgressiGioco = async (req, res) => {
   }
 };
 
+const getDatiBambinoPerGioco = async (req, res) => {
+  try {
+    const { codiceGioco } = req.params;
+
+    // Trova il bambino tramite codiceGioco
+    const bambino = await Bambino.findOne(
+      { codiceGioco },
+      'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier' // campi da restituire
+    );
+
+    if (!bambino) {
+      return res.status(404).json({ error: 'Codice gioco non valido' });
+    }
+
+    // Risposta JSON al gioco
+    res.json(bambino);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 
 
@@ -166,4 +188,5 @@ module.exports = {
   assegnaPercorso,
   getPercorsiAssegnati,
   updateProgressiGioco,
+  getDatiBambinoPerGioco,
 };
