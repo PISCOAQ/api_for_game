@@ -8,4 +8,8 @@ router.post('/', controller.createTentativoTest);
 // GET -> tutti i tentativi di un bambino tramite codiceGioco
 router.get('/tentativi/:codiceGioco', controller.getTestByBambino);
 
+// GET -> tutti i tentativi nel db
+router.get('/tutti', controller.getAllTentativi);
+
+
 module.exports = router;

@@ -68,3 +68,13 @@ exports.getTestByBambino = async (req, res) => {
   }
 };
 
+exports.getAllTentativi = async (req, res) => {
+  try {
+    const tentativi = await TentativoTest.find();
+    return res.status(200).json(tentativi);
+  } catch (error) {
+    return res.status(500).json({ message: 'Errore server' });
+  }
+};
+
+
