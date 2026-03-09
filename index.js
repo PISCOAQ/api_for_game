@@ -13,7 +13,7 @@ app.use(express.json());
 connectDB();
 
 // Routes
-app.use(require('./routes/bambino.routes'));
+app.use(require('./routes/utente.routes'));
 app.use('/api/tentativi-test', require('./routes/tentativoTest.routes'));
 app.use(excelRoutes);
 

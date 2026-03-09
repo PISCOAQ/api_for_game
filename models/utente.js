@@ -41,7 +41,7 @@ const DiagnosiSchema = new mongoose.Schema(
   { _id: false } // 👈 importantissimo
 );
 
-const BambinoSchema = new mongoose.Schema({
+const UtenteSchema = new mongoose.Schema({
   nome: { 
     type: String,
     required: true
@@ -149,4 +149,4 @@ const BambinoSchema = new mongoose.Schema({
   versionKey: false
 });
 
-module.exports = mongoose.model('Bambino', BambinoSchema);
+module.exports = mongoose.model('Utente', UtenteSchema);

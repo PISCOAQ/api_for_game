@@ -1,7 +1,7 @@
 // services/excelService.js
 const ExcelJS = require("exceljs");
 
-exports.createExcel = async (bambino, tentativi) => {
+exports.createExcel = async (utente, tentativi) => {
   const workbook = new ExcelJS.Workbook();
 
   const sheet = workbook.addWorksheet("Report");
@@ -100,15 +100,15 @@ exports.createExcel = async (bambino, tentativi) => {
 
 
     const row = {
-      codiceGioco: bambino.codiceGioco,
-      cognome: bambino.cognome,
-      nome: bambino.nome,
-      eta: calcolaEta(bambino.dataNascita),
-      sesso: bambino.sesso,
-      titolo: bambino.titoloStudio,
-      scuola: bambino.scuolaFrequentata,
-      diagnosi: bambino.diagnosi ? bambino.diagnosi.testo: '',
-      note: bambino.diagnosi ? bambino.diagnosi.note: '',
+      codiceGioco: utente.codiceGioco,
+      cognome: utente.cognome,
+      nome: utente.nome,
+      eta: calcolaEta(utente.dataNascita),
+      sesso: utente.sesso,
+      titolo: utente.titoloStudio,
+      scuola: utente.scuolaFrequentata,
+      diagnosi: utente.diagnosi ? utente.diagnosi.testo: '',
+      note: utente.diagnosi ? utente.diagnosi.note: '',
     };
 
     sheet.getColumn("eta").alignment = { horizontal: "left" };

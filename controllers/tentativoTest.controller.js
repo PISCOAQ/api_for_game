@@ -1,4 +1,4 @@
-const Bambino = require('../models/bambino');
+const Utente = require('../models/utente');
 const TentativoTest = require('../models/tentativoTest');
 
 /**
@@ -19,15 +19,15 @@ exports.createTentativoTest = async (req, res) => {
       domande
     } = req.body;
 
-    // Trova il bambino tramite codiceGioco
-    const bambino = await Bambino.findOne({ codiceGioco });
-    if (!bambino) {
+    // Trova l'utente tramite codiceGioco
+    const utente = await Utente.findOne({ codiceGioco });
+    if (!utente) {
       return res.status(404).json({ error: 'Codice gioco non valido' });
     }
 
     // Crea un nuovo tentativoTest
     const tentativo = new TentativoTest({
-      bambinoId: bambino._id,
+      utenteId: utente._id,
       testId,
       nomeTest,
       tipoTest,
@@ -51,15 +51,15 @@ exports.createTentativoTest = async (req, res) => {
 
 
 
-// GET -> tutti i tentativi di un bambino
-exports.getTestByBambino = async (req, res) => {
+// GET -> tutti i tentativi di un utente
+exports.getTestByUtente = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
 
-    const bambino = await Bambino.findOne({ codiceGioco });
-    if (!bambino) return res.status(404).json({ message: 'Bambino non trovato' });
+    const utente = await Utente.findOne({ codiceGioco });
+    if (!utente) return res.status(404).json({ message: 'Utente non trovato' });
 
-    const tentativi = await TentativoTest.find({ bambinoId: bambino._id });
+    const tentativi = await TentativoTest.find({ utenteId: utente._id });
 
     return res.status(200).json(tentativi);
   } catch (error) {

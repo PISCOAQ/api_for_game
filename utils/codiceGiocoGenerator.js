@@ -1,4 +1,4 @@
-const Bambino = require('../models/bambino');
+const Utente = require('../models/utente');
 
 const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // caratteri leggibili, senza O,0,I,1
 
@@ -13,7 +13,7 @@ async function generaCodiceGiocoUnico() {
     }
 
     // controlla unicità nel DB
-    esiste = await Bambino.exists({ codiceGioco: codice });
+    esiste = await Utente.exists({ codiceGioco: codice });
 
   } while (esiste);
 

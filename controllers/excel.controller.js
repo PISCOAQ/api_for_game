@@ -1,22 +1,22 @@
 const excelService = require("../services/excelService");
-const Bambino = require("../models/bambino");
+const Utente = require("../models/utente");
 const TentativoTest = require("../models/tentativoTest");
 
 exports.exportExcel = async (req, res) => {
   try {
-    const { bambinoId } = req.params;
+    const { utenteId } = req.params;
 
-    console.log("bambinoId:", bambinoId);
+    console.log("utenteId:", utenteId);
 
 
-    const bambino = await Bambino.findById(bambinoId);
-    if (!bambino) {
-      return res.status(404).json({ message: "Bambino non trovato" });
+    const utente = await Utente.findById(utenteId);
+    if (!utente) {
+      return res.status(404).json({ message: "Utente non trovato" });
     }
 
-    const tentativi = await TentativoTest.find({ bambinoId });
+    const tentativi = await TentativoTest.find({ utenteId });
 
-    const workbook = await excelService.createExcel(bambino, tentativi);
+    const workbook = await excelService.createExcel(utente, tentativi);
 
     res.setHeader(
       "Content-Type",
@@ -24,7 +24,7 @@ exports.exportExcel = async (req, res) => {
     );
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="report_${bambino.nome}.xlsx"`
+      `attachment; filename="report_${utente.nome}.xlsx"`
     );
 
     await workbook.xlsx.write(res);

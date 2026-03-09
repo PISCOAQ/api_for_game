@@ -17,9 +17,9 @@ const DomandaSchema = new mongoose.Schema({
 
 const TentativoTestSchema = new mongoose.Schema({
 
-  bambinoId: {
+  utenteId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bambino',
+    ref: 'Utente',
     required: true,
     index: true
   },

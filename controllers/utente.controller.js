@@ -1,13 +1,13 @@
-const bambino = require('../models/bambino');
-const Bambino = require('../models/bambino');
+const utente = require('../models/utente');
+const Utente = require('../models/utente');
 const generaCodiceGiocoUnico = require('../utils/codiceGiocoGenerator');
 
-// POST /bambino
-const creaBambino = async (req, res) => {
+// POST /utente
+const creaUtente = async (req, res) => {
   try {
     const { nome, cognome, dataNascita, sesso, email, numTelefono, scuolaFrequentata, titoloStudio } = req.body;
     const codiceGioco = await generaCodiceGiocoUnico();
-    const nuovoBambino = await Bambino.create({
+    const nuovoUtente = await Utente.create({
       nome,
       cognome,
       dataNascita,
@@ -18,17 +18,17 @@ const creaBambino = async (req, res) => {
       titoloStudio,
       codiceGioco,
     });
-    res.status(201).json({nuovoBambino});
+    res.status(201).json({nuovoUtente});
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-// GET /bambino
-const listaBambini = async (req, res) => {
+// GET /utente
+const listaUtenti = async (req, res) => {
   try {
-    const bambini = await Bambino.find();
-    res.json(bambini);
+    const utenti = await Utente.find();
+    res.json(utenti);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -43,14 +43,14 @@ const assegnaPercorso = async (req, res) => {
       return res.status(400).json({ message: 'Dati percorso mancanti' });
     }
 
-    const bambino = await Bambino.findById(id);
+    const utente = await Utente.findById(id);
 
-    if (!bambino) {
+    if (!utente) {
       return res.status(404).json({ message: 'Utente non trovato' });
     }
 
     // evita duplicati
-    const giàAssegnato = bambino.percorsiAssegnati.some(
+    const giàAssegnato = utente.percorsiAssegnati.some(
       p => p.percorsoIdEsterno === percorsoIdEsterno
     );
 
@@ -58,14 +58,14 @@ const assegnaPercorso = async (req, res) => {
       return res.status(200).json({ message: 'Percorso già assegnato' });
     }
 
-    bambino.percorsiAssegnati.push({
+    utente.percorsiAssegnati.push({
       percorsoIdEsterno,
       nomePercorso
     });
 
-    await bambino.save();
+    await utente.save();
 
-    res.status(200).json({bambino});
+    res.status(200).json({utente});
 
   } catch (error) {
     console.error(error);
@@ -77,20 +77,20 @@ const getPercorsiAssegnati = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
 
-    const bambino = await Bambino.findOne({ codiceGioco }).select('percorsiAssegnati');
+    const utente = await Utente.findOne({ codiceGioco }).select('percorsiAssegnati');
 
-    if (!bambino) {
-      return res.status(404).json({ message: 'Bambino non trovato' });
+    if (!utente) {
+      return res.status(404).json({ message: 'Utente non trovato' });
     }
 
-    res.status(200).json(bambino.percorsiAssegnati);
+    res.status(200).json(utente.percorsiAssegnati);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Errore server' });
   }
 };
 
-// PATCH /bambini/:codiceGioco/progressi
+// PATCH /utenti/:codiceGioco/progressi
 const updateProgressiGioco = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
@@ -138,17 +138,17 @@ const updateProgressiGioco = async (req, res) => {
     console.log("Aggiornamenti inviati:", aggiornamenti);
 
 
-    const bambinoAggiornato = await Bambino.findOneAndUpdate(
+    const utenteAggiornato = await Utente.findOneAndUpdate(
       { codiceGioco },
       { $set: aggiornamenti },
       { new: true }
     );
 
-    if (!bambinoAggiornato) {
-      return res.status(404).json({ message: "Bambino non trovato" });
+    if (!utenteAggiornato) {
+      return res.status(404).json({ message: "Utente non trovato" });
     }
 
-    res.status(200).json(bambinoAggiornato);
+    res.status(200).json(utenteAggiornato);
 
   } catch (error) {
     console.error(error);
@@ -156,22 +156,22 @@ const updateProgressiGioco = async (req, res) => {
   }
 };
 
-const getDatiBambinoPerGioco = async (req, res) => {
+const getDatiUtentePerGioco = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
 
-    // Trova il bambino tramite codiceGioco
-    const bambino = await Bambino.findOne(
+    // Trova il utente tramite codiceGioco
+    const utente = await Utente.findOne(
       { codiceGioco },
       'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier' // campi da restituire
     );
 
-    if (!bambino) {
+    if (!utente) {
       return res.status(404).json({ error: 'Codice gioco non valido' });
     }
 
     // Risposta JSON al gioco
-    res.json(bambino);
+    res.json(utente);
 
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -183,10 +183,10 @@ const getDatiBambinoPerGioco = async (req, res) => {
 
 
 module.exports = {
-  creaBambino,
-  listaBambini,
+  creaUtente,
+  listaUtenti,
   assegnaPercorso,
   getPercorsiAssegnati,
   updateProgressiGioco,
-  getDatiBambinoPerGioco,
+  getDatiUtentePerGioco,
 };
