@@ -16,7 +16,7 @@ connectDB();
 app.use(require('./routes/utente.routes'));
 app.use('/api/tentativi-test', require('./routes/tentativoTest.routes'));
 app.use(excelRoutes);
-app.use(healthRoutes);
+app.use('/api/health', healthRoutes);
 
 // Avvio server
 app.listen(3000, () => {
