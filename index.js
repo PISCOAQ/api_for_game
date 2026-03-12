@@ -3,11 +3,23 @@ const express = require('express');
 const connectDB = require('./config/db');
 const excelRoutes = require("./routes/excel.routes");
 const healthRoutes = require("./routes/health.routes");
+const cors = require('cors');
 
 const app = express();
 
 // Middleware
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // automatically set cors origin header based on client request for faster developing
+      // TODO: check domain cors in production env
+      return callback(null, true);
+    },
+    credentials: true,
+  }),
+);
 
 // DB
 connectDB();
