@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
 const excelRoutes = require("./routes/excel.routes");
-
+const healthRoutes = require("./routes/health.routes");
 
 const app = express();
 
@@ -16,6 +16,7 @@ connectDB();
 app.use(require('./routes/utente.routes'));
 app.use('/api/tentativi-test', require('./routes/tentativoTest.routes'));
 app.use(excelRoutes);
+app.use(healthRoutes);
 
 // Avvio server
 app.listen(3000, () => {
