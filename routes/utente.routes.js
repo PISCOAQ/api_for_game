@@ -6,7 +6,8 @@ const {
   assegnaPercorso,
   getPercorsiAssegnati,
   updateProgressiGioco,
-  getDatiUtentePerGioco
+  getDatiUtentePerGioco,
+  updateCtxPercorso
 } = require('../controllers/utente.controller');
 const utente = require('../models/utente');
 
@@ -26,6 +27,7 @@ router.get('/utenti/:codiceGioco/percorsi', getPercorsiAssegnati);
 
 router.patch('/utenti/:codiceGioco/progressi', updateProgressiGioco);
 router.get('/utente/:codiceGioco', getDatiUtentePerGioco);
+router.patch("/utenti/:codiceGioco/ctx", updateCtxPercorso);
 
 router.put('/utenti/:id/diagnosi', salvaDiagnosi);
 router.delete('/utenti/:id/diagnosi', eliminaDiagnosi);

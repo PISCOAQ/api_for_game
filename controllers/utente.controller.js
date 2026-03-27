@@ -94,7 +94,7 @@ const getPercorsiAssegnati = async (req, res) => {
 const updateProgressiGioco = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
-    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier, ctxId } = req.body;
+    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier} = req.body;
 
     // Costruisco oggetto aggiornamenti SOLO con campi permessi
     const aggiornamenti = {};
@@ -125,10 +125,6 @@ const updateProgressiGioco = async (req, res) => {
 
     if (typeof moneteNotifier === "number") {
       aggiornamenti.moneteNotifier = moneteNotifier;
-    }
-
-    if (typeof ctxId === "string") {
-      aggiornamenti.ctxId = ctxId;
     }
 
 
@@ -167,7 +163,7 @@ const getDatiUtentePerGioco = async (req, res) => {
     // Trova il utente tramite codiceGioco
     const utente = await Utente.findOne(
       { codiceGioco },
-      'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier ctxId' // campi da restituire
+      'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier percorsiAssegnati' // campi da restituire
     );
 
     if (!utente) {
@@ -182,6 +178,47 @@ const getDatiUtentePerGioco = async (req, res) => {
   }
 };
 
+const updateCtxPercorso = async (req, res) => {
+  try {
+    const { codiceGioco } = req.params;
+    const { percorsoId, ctxId } = req.body;
+
+    if (!percorsoId || !ctxId) {
+      return res.status(400).json({
+        message: "percorsoId e ctxId sono obbligatori"
+      });
+    }
+
+    const result = await Utente.updateOne(
+      {
+        codiceGioco,
+        "percorsiAssegnati.percorsoIdEsterno": percorsoId
+      },
+      {
+        $set: {
+          "percorsiAssegnati.$.ctxId": ctxId
+        }
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        message: "Utente o percorso non trovato"
+      });
+    }
+
+    res.status(200).json({
+      message: "ctxId aggiornato correttamente"
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Errore server"
+    });
+  }
+};
+
 
 
 
@@ -193,4 +230,5 @@ module.exports = {
   getPercorsiAssegnati,
   updateProgressiGioco,
   getDatiUtentePerGioco,
+  updateCtxPercorso,
 };

@@ -108,6 +108,10 @@ const UtenteSchema = new mongoose.Schema({
     assegnatoIl: {
       type: Date,
       default: Date.now
+    },
+    ctxId: {
+    type: String,
+    default: null,
     }
   }],
   tipoAvatar: {
@@ -140,10 +144,7 @@ const UtenteSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  ctxId: {
-    type: String,
-    default: null,
-  },
+  
 
   
 
