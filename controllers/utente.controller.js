@@ -94,7 +94,7 @@ const getPercorsiAssegnati = async (req, res) => {
 const updateProgressiGioco = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
-    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier } = req.body;
+    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier, ctxId } = req.body;
 
     // Costruisco oggetto aggiornamenti SOLO con campi permessi
     const aggiornamenti = {};
@@ -125,6 +125,10 @@ const updateProgressiGioco = async (req, res) => {
 
     if (typeof moneteNotifier === "number") {
       aggiornamenti.moneteNotifier = moneteNotifier;
+    }
+
+    if (typeof ctxId === "string") {
+      aggiornamenti.ctxId = ctxId;
     }
 
 
@@ -163,7 +167,7 @@ const getDatiUtentePerGioco = async (req, res) => {
     // Trova il utente tramite codiceGioco
     const utente = await Utente.findOne(
       { codiceGioco },
-      'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier' // campi da restituire
+      'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier ctxId' // campi da restituire
     );
 
     if (!utente) {
