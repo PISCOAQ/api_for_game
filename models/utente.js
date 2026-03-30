@@ -112,24 +112,25 @@ const UtenteSchema = new mongoose.Schema({
     ctxId: {
     type: String,
     default: null,
-    }
+    },
+    Livello_Attuale: {
+    type: Number,
+    default: 0
+    },
+    PosizioneX: {
+      type: Number,
+      default: 0
+    },
+    PosizioneY: {
+      type: Number,
+      default: 0
+    },
   }],
   tipoAvatar: {
     type: Number,
     default: null,
   },
-  Livello_Attuale: {
-    type: Number,
-    default: 0
-  },
-  PosizioneX: {
-    type: Number,
-    default: 0
-  },
-  PosizioneY: {
-    type: Number,
-    dafault: 0
-  },
+  
   lookAttuale: {
     type: Map,
     of: String,

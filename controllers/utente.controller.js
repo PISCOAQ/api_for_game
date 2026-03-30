@@ -94,7 +94,7 @@ const getPercorsiAssegnati = async (req, res) => {
 const updateProgressiGioco = async (req, res) => {
   try {
     const { codiceGioco } = req.params;
-    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier} = req.body;
+    const { tipoAvatar, Livello_Attuale, PosizioneX, PosizioneY, lookAttuale, inventario, moneteNotifier, percorsoId} = req.body;
 
     // Costruisco oggetto aggiornamenti SOLO con campi permessi
     const aggiornamenti = {};
@@ -111,25 +111,25 @@ const updateProgressiGioco = async (req, res) => {
       aggiornamenti.tipoAvatar = tipoAvatar;
     }
 
-    if (typeof Livello_Attuale === "number") {
-      aggiornamenti.Livello_Attuale = Livello_Attuale;
-    }
-
-    if (typeof PosizioneX === "number") {
-      aggiornamenti.PosizioneX = PosizioneX;
-    }
-
-    if (typeof PosizioneY === "number") {
-      aggiornamenti.PosizioneY = PosizioneY;
-    }
-
     if (typeof moneteNotifier === "number") {
       aggiornamenti.moneteNotifier = moneteNotifier;
     }
 
+    const aggiornamentiPercorso = {};
 
+    if (typeof Livello_Attuale === "number") {
+      aggiornamentiPercorso["percorsiAssegnati.$.Livello_Attuale"] = Livello_Attuale;
+    }
 
-    if (Object.keys(aggiornamenti).length === 0) {
+    if (typeof PosizioneX === "number") {
+      aggiornamentiPercorso["percorsiAssegnati.$.PosizioneX"] = PosizioneX;
+    }
+
+    if (typeof PosizioneY === "number") {
+      aggiornamentiPercorso["percorsiAssegnati.$.PosizioneY"] = PosizioneY;
+    }
+
+    if (Object.keys(aggiornamenti).length === 0 && Object.keys(aggiornamentiPercorso).length === 0) {
       return res.status(400).json({
         message: "Nessun campo valido da aggiornare"
       });
@@ -139,8 +139,12 @@ const updateProgressiGioco = async (req, res) => {
 
 
     const utenteAggiornato = await Utente.findOneAndUpdate(
-      { codiceGioco },
-      { $set: aggiornamenti },
+      { codiceGioco, "percorsiAssegnati.percorsoIdEsterno": percorsoId },
+      { $set: {
+            ...aggiornamenti,
+            ...aggiornamentiPercorso 
+        },
+      },
       { new: true }
     );
 
@@ -163,7 +167,7 @@ const getDatiUtentePerGioco = async (req, res) => {
     // Trova il utente tramite codiceGioco
     const utente = await Utente.findOne(
       { codiceGioco },
-      'tipoAvatar Livello_Attuale PosizioneX PosizioneY lookAttuale inventario moneteNotifier percorsiAssegnati' // campi da restituire
+      'tipoAvatar lookAttuale inventario moneteNotifier'// campi da restituire
     );
 
     if (!utente) {
