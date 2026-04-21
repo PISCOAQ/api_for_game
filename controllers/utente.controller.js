@@ -107,12 +107,11 @@ const updateProgressiGioco = async (req, res) => {
     const {
       tipoAvatar,
       Livello_Attuale,
-      PosizioneX,
-      PosizioneY,
       lookAttuale,
       inventario,
       moneteNotifier,
       percorsoId,
+      Completato,
     } = req.body;
 
     // Costruisco oggetto aggiornamenti SOLO con campi permessi
@@ -141,12 +140,8 @@ const updateProgressiGioco = async (req, res) => {
         Livello_Attuale;
     }
 
-    if (typeof PosizioneX === "number") {
-      aggiornamentiPercorso["percorsiAssegnati.$.PosizioneX"] = PosizioneX;
-    }
-
-    if (typeof PosizioneY === "number") {
-      aggiornamentiPercorso["percorsiAssegnati.$.PosizioneY"] = PosizioneY;
+    if (typeof Completato === "boolean") {
+      aggiornamentiPercorso["percorsiAssegnati.$.Completato"] = Completato;
     }
 
     if (
