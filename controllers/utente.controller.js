@@ -100,6 +100,40 @@ const getPercorsiAssegnati = async (req, res) => {
   }
 };
 
+const removePercorsoAssegnato = async (req, res) => {
+  try {
+    const { codiceGioco, percorsoIdEsterno } = req.params;
+
+    const utente = await Utente.findOneAndUpdate(
+      { codiceGioco },
+      {
+        $pull: {
+          percorsiAssegnati: {
+            percorsoIdEsterno: percorsoIdEsterno,
+          },
+        },
+      },
+      { new: true },
+    );
+
+    if (!utente) {
+      return res.status(404).json({
+        message: "Utente non trovato",
+      });
+    }
+
+    res.status(200).json({
+      message: "Percorso rimosso con successo",
+      percorsiAssegnati: utente.percorsiAssegnati,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Errore server",
+    });
+  }
+};
+
 // PATCH /utenti/:codiceGioco/progressi
 const updateProgressiGioco = async (req, res) => {
   try {
@@ -276,6 +310,7 @@ module.exports = {
   listaUtenti,
   assegnaPercorso,
   getPercorsiAssegnati,
+  removePercorsoAssegnato,
   updateProgressiGioco,
   getDatiUtentePerGioco,
   updateCtxPercorso,

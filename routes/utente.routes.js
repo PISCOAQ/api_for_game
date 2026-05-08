@@ -5,6 +5,7 @@ const {
   listaUtenti,
   assegnaPercorso,
   getPercorsiAssegnati,
+  removePercorsoAssegnato,
   updateProgressiGioco,
   getDatiUtentePerGioco,
   updateCtxPercorso,
@@ -23,6 +24,10 @@ router.post("/utenti/delete", deleteUtenti);
 
 router.post("/utenti/:id/assegna-percorso", assegnaPercorso);
 router.get("/utenti/:codiceGioco/percorsi", getPercorsiAssegnati);
+router.delete(
+  "/utenti/:codiceGioco/percorsi/:percorsoIdEsterno",
+  removePercorsoAssegnato,
+);
 
 router.patch("/utenti/:codiceGioco/progressi", updateProgressiGioco);
 router.get("/utente/:codiceGioco", getDatiUtentePerGioco);
