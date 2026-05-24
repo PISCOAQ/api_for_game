@@ -17,15 +17,18 @@ const {
   salvaDiagnosi,
   eliminaDiagnosi,
 } = require("../controllers/diagnosi.controller");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/utente", creaUtente);
-router.get("/utente", listaUtenti);
-router.post("/utenti/delete", deleteUtenti);
+router.post("/utente", authMiddleware, creaUtente);
+router.get("/utente", authMiddleware, listaUtenti);
+router.post("/utenti/delete", authMiddleware, deleteUtenti);
 
-router.post("/utenti/:id/assegna-percorso", assegnaPercorso);
+router.post("/utenti/:id/assegna-percorso", authMiddleware, assegnaPercorso);
 router.get("/utenti/:codiceGioco/percorsi", getPercorsiAssegnati);
+
 router.delete(
-  "/utenti/:codiceGioco/percorsi/:percorsoIdEsterno",
+  "/utenti/:id/percorsi/:percorsoIdEsterno",
+  authMiddleware,
   removePercorsoAssegnato,
 );
 
@@ -33,7 +36,7 @@ router.patch("/utenti/:codiceGioco/progressi", updateProgressiGioco);
 router.get("/utente/:codiceGioco", getDatiUtentePerGioco);
 router.patch("/utenti/:codiceGioco/ctx", updateCtxPercorso);
 
-router.put("/utenti/:id/diagnosi", salvaDiagnosi);
-router.delete("/utenti/:id/diagnosi", eliminaDiagnosi);
+router.put("/utenti/:id/diagnosi", authMiddleware, salvaDiagnosi);
+router.delete("/utenti/:id/diagnosi", authMiddleware, eliminaDiagnosi);
 
 module.exports = router;

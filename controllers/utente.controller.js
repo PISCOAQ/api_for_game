@@ -26,6 +26,7 @@ const creaUtente = async (req, res) => {
       scuolaFrequentata,
       titoloStudio,
       codiceGioco,
+      analistaId: req.user.id,
     });
     res.status(201).json({ nuovoUtente });
   } catch (err) {
@@ -36,7 +37,7 @@ const creaUtente = async (req, res) => {
 // GET /utente
 const listaUtenti = async (req, res) => {
   try {
-    const utenti = await Utente.find();
+    const utenti = await Utente.find({ analistaId: req.user.id });
     res.json(utenti);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -52,7 +53,7 @@ const assegnaPercorso = async (req, res) => {
       return res.status(400).json({ message: "Dati percorso mancanti" });
     }
 
-    const utente = await Utente.findById(id);
+    const utente = await Utente.findOne({ _id: id, analistaId: req.user.id });
 
     if (!utente) {
       return res.status(404).json({ message: "Utente non trovato" });
@@ -102,10 +103,10 @@ const getPercorsiAssegnati = async (req, res) => {
 
 const removePercorsoAssegnato = async (req, res) => {
   try {
-    const { codiceGioco, percorsoIdEsterno } = req.params;
+    const { id, percorsoIdEsterno } = req.params;
 
     const utente = await Utente.findOneAndUpdate(
-      { codiceGioco },
+      { _id: id, analistaId: req.user.id },
       {
         $pull: {
           percorsiAssegnati: {
@@ -283,14 +284,27 @@ const deleteUtenti = async (req, res) => {
       });
     }
 
-    // 1. elimina tutti i tentativi degli utenti
+    const utentiDiProprieta = await Utente.find({
+      _id: { $in: userIds },
+      analistaId: req.user.id,
+    }).select("_id");
+
+    if (utentiDiProprieta.length !== userIds.length) {
+      return res.status(403).json({
+        message:
+          "Non puoi eliminare utenti che non appartengono al tuo account",
+      });
+    }
+
+    const ownedIds = utentiDiProprieta.map((u) => u._id);
+
     await tentativoTest.deleteMany({
-      utenteId: { $in: userIds },
+      utenteId: { $in: ownedIds },
     });
 
-    // 2. elimina utenti
     const result = await Utente.deleteMany({
-      _id: { $in: userIds },
+      _id: { $in: ownedIds },
+      analistaId: req.user.id,
     });
 
     res.status(200).json({

@@ -8,8 +8,8 @@ async function salvaDiagnosi(req, res) {
       return res.status(400).json({ message: 'Campi obbligatori mancanti' });
     }
 
-    const utente = await Utente.findByIdAndUpdate(
-      req.params.id,
+    const utente = await Utente.findOneAndUpdate(
+      { _id: req.params.id, analistaId: req.user.id },
       {
         diagnosi: {
           testo,
@@ -18,7 +18,7 @@ async function salvaDiagnosi(req, res) {
           dataInserimento: new Date(),
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!utente) {
@@ -33,10 +33,10 @@ async function salvaDiagnosi(req, res) {
 
 async function eliminaDiagnosi(req, res) {
   try {
-    const utente = await Utente.findByIdAndUpdate(
-      req.params.id,
+    const utente = await Utente.findOneAndUpdate(
+      { _id: req.params.id, analistaId: req.user.id },
       { $unset: { diagnosi: "" } },
-      { new: true }
+      { new: true },
     );
 
     if (!utente) {

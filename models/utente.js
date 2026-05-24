@@ -1,3 +1,4 @@
+const { MongoTopologyClosedError } = require("mongodb");
 const mongoose = require("mongoose");
 
 const SCUOLE = [
@@ -89,6 +90,12 @@ const UtenteSchema = new mongoose.Schema(
     titoloStudio: {
       type: String,
       enum: TITOLI_STUDIO,
+      required: true,
+    },
+
+    analistaId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Analista",
       required: true,
     },
 

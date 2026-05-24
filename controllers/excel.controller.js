@@ -9,7 +9,10 @@ exports.exportExcel = async (req, res) => {
     console.log("utenteId:", utenteId);
 
 
-    const utente = await Utente.findById(utenteId);
+    const utente = await Utente.findOne({
+      _id: utenteId,
+      analistaId: req.user.id,
+    });
     if (!utente) {
       return res.status(404).json({ message: "Utente non trovato" });
     }
