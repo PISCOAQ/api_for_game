@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Analista = require("../models/Analista");
+const Analista = require("../models/analista");
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
